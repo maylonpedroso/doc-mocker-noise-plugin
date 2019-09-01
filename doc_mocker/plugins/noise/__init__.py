@@ -23,8 +23,7 @@ class Noise:
 
     def process_page(self, page):
         for processor in self._processors:
-            page = processor.process_page(page)
-        return page
+            processor.process_page(page)
 
     @classmethod
     def register(cls, name: str) -> Callable:
@@ -34,12 +33,18 @@ class Noise:
 
         return register_class
 
+    @classmethod
+    def noises(cls):
+        return cls._classes.keys()
+
+
+__import__("doc_mocker.plugins.noise.salt_pepper")
 
 arguments = [
     (
         ("--noise",),
         {
-            "help": "Apply multiple noise filters. Supported: `pepper[:n][:m]`",
+            "help": f"Apply multiple noise filters. Supported: {', '.join(Noise.noises())}",
             "nargs": "+",
             "default": [],
         },
@@ -47,5 +52,3 @@ arguments = [
 ]
 
 cls = Noise
-
-__import__("doc_mocker.plugins.noise.pepper")
